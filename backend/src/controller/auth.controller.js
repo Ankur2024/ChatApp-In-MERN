@@ -13,10 +13,10 @@ export const handleLogin = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
         const isPasswordCorrect = await user.matchPassword(password);
-        if(!isPasswordCorrect){
+        if (!isPasswordCorrect) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET_KEY, {
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
             expiresIn: "7d"
         })
 
@@ -26,7 +26,7 @@ export const handleLogin = async (req, res) => {
             sameSite: "strict", // prevent CSRF attacks
             secure: process.env.NODE_ENV === 'production'
         })
-        res.status(200).json({ success: true, user});
+        res.status(200).json({ success: true, user });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Error in login controller" });
@@ -49,18 +49,18 @@ export const handleSignup = async (req, res) => {
             return res.status(400).json({ message: "Invalid email format" });
         }
         const existingUser = await User.findOne({ email });
-        if(existingUser){
+        if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        const index  = Math.floor(Math.random() * 100) + 1;
+        const index = Math.floor(Math.random() * 100) + 1;
         const randomAvatar = `https://avatar.iran.liara.run/public/${index}.png`;
 
         const newUser = await User.create({
             email,
             password,
             fullName,
-            profilePicture:  randomAvatar,
+            profilePicture: randomAvatar,
         })
 
         try {
@@ -74,7 +74,7 @@ export const handleSignup = async (req, res) => {
             console.log("Error in creating stream user", error);
         }
 
-        const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET_KEY, {
+        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET_KEY, {
             expiresIn: "7d"
         })
 
@@ -103,5 +103,46 @@ export const handleLogout = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Error in logout controller" });
+    }
+}
+
+export async function handleOnBoarding(req, res) {
+    try {
+        const userId = req.user._id;
+        const { fullName, bio, learningLanguage, nativeLanguage, location } = req.body;
+        if (!fullName || !bio || !learningLanguage || !nativeLanguage || !location) {
+            return res.status(400).json({
+                message: "Please fill all the fields", missingFields: [
+                    !fullName && "fullName",
+                    !bio && "bio",
+                    !learningLanguage && "learningLanguage",
+                    !nativeLanguage && "nativeLanguage",
+                    !location && "location"
+                ].filter(Boolean),
+            });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            ...req.body,
+            isBoarding: true,
+        }, {new: true});
+        if(!updatedUser){
+            return res.status(404).json({ message: "User not found" });
+        }
+        try {
+            await upsertStreamUser({
+                id: updatedUser._id.toString(),
+                name: updatedUser.fullName,
+                image: updatedUser.profilePicture || ""
+            })
+            console.log("Stream User updated for ", updatedUser.fullName);
+        } catch (error) {
+            console.log("Error in updating stream user", error);
+        }
+        
+        res.status(200).json({success: true, user: updatedUser});
+    } catch (error) {
+        console.log("Error in handleOnBoarding controller", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
