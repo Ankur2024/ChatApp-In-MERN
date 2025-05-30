@@ -1,20 +1,25 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { Route, Routes } from "react-router";
+import Home from "./components/home/Home.jsx";
+import SignUp from "./components/login/SignUp.jsx";
+import Login from "./components/login/Login.jsx";
+import Notification from "./components/notification/Notification.jsx";
+import Call from "./components/call/Call.jsx";
+import Chat from "./components/chat/Chat.jsx";
+import OnBoarding from "./components/onboarding/OnBoarding.jsx";
 
 function App() {
-
   return (
-    <div>
-      <button className="btn btn-neutral">Neutral</button>
-      <button className="btn btn-primary">Primary</button>
-      <button className="btn btn-secondary">Secondary</button>
-      <button className="btn btn-accent">Accent</button>
-      <button className="btn btn-info">Info</button>
-      <button className="btn btn-success">Success</button>
-      <button className="btn btn-warning">Warning</button>
-      <button className="btn btn-error">Error</button>
+    <div className="h-screen" data-theme="night">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/call" element={<Call />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/onboarding" element={<OnBoarding />} />
+      </Routes>
     </div>
   );
 }
