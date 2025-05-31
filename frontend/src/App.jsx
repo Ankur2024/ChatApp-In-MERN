@@ -7,6 +7,7 @@ import Notification from "./components/notification/Notification.jsx";
 import Call from "./components/call/Call.jsx";
 import Chat from "./components/chat/Chat.jsx";
 import OnBoarding from "./components/onboarding/OnBoarding.jsx";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/onboarding" element={<OnBoarding />} />
       </Routes>
+      <Toaster />
+      
     </div>
   );
 }
