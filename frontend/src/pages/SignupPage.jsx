@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { axiosInstance } from "../lib/axios";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
-import signup from "../lib/api";
-import PageLoader from "../components/PageLoader";
+import { signup } from "../lib/api.js";
 
 function SignupPage() {
   const [signupData, setSignupData] = useState({

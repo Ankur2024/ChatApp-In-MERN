@@ -1,6 +1,3 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router";
 import HomePage from "./pages/HomePage";
@@ -16,6 +13,8 @@ import useAuthUser from "./hooks/useAuthUser";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
+  const isAuthenticated = Boolean(authUser);
+  const isOnboarded = authUser?.isOnboarded
   if (isLoading) {
     return <PageLoader />;
   }
@@ -25,31 +24,31 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+          element={isAuthenticated && isOnboarded ? (<HomePage />) : (<Navigate to={!isAuthenticated ? "/login": "/onboarding"}/>)}
         />
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+          element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
         />
         <Route
           path="/signup"
-          element={!authUser ? <SignupPage /> : <Navigate to="/" />}
+          element={!isAuthenticated ? <SignupPage /> : <Navigate to="/" />}
         />
         <Route
           path="/notification"
-          element={authUser ? <NotifcationPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <NotifcationPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/call"
-          element={authUser ? <CallPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <CallPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/chat"
-          element={authUser ? <ChatPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}
         />
         <Route
           path="/onboarding"
-          element={authUser ? <OnBoardingPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <OnBoardingPage /> : <Navigate to="/login" />}
         />
       </Routes>
       <Toaster />
