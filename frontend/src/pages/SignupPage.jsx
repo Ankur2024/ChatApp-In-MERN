@@ -4,6 +4,7 @@ import { axiosInstance } from "../lib/axios";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
 import signup from "../lib/api";
+import PageLoader from "../components/PageLoader";
 
 function SignupPage() {
   const [signupData, setSignupData] = useState({
@@ -23,6 +24,7 @@ function SignupPage() {
     e.preventDefault();
     signupMutation(signupData);
   };
+
 
   return (
     <div
