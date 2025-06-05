@@ -14,7 +14,7 @@ import useAuthUser from "./hooks/useAuthUser";
 function App() {
   const { isLoading, authUser } = useAuthUser();
   const isAuthenticated = Boolean(authUser);
-  const isOnboarded = authUser?.isOnboarded
+  const isOnboarded = authUser?.isBoarding;
   if (isLoading) {
     return <PageLoader />;
   }
@@ -48,7 +48,17 @@ function App() {
         />
         <Route
           path="/onboarding"
-          element={isAuthenticated ? <OnBoardingPage /> : <Navigate to="/login" />}
+          element={
+            isAuthenticated ? (
+              !isOnboarded ? (
+                <OnBoardingPage />
+              ) : (
+                <Navigate to="/" />
+              )
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
       <Toaster />
