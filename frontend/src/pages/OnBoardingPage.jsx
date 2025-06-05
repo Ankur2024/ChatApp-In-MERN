@@ -47,6 +47,7 @@ function OnBoardingPage() {
     setFormState({ ...formState, profilePic: randomAvatar });
     toast.success("Random profile picture generated!");
   }
+
   
 
   return (
