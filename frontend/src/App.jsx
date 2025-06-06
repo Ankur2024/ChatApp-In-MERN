@@ -10,6 +10,7 @@ import CallPage from "./pages/CallPage";
 import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader";
 import useAuthUser from "./hooks/useAuthUser";
+import Layout from "./components/Layout";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
@@ -24,23 +25,41 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated && isOnboarded ? (<HomePage />) : (<Navigate to={!isAuthenticated ? "/login": "/onboarding"}/>)}
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar={true}>
+                <HomePage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/login"
           element={
-            !isAuthenticated ? <LoginPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            !isAuthenticated ? (
+              <LoginPage />
+            ) : (
+              <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            )
           }
-        /> 
+        />
         <Route
           path="/signup"
           element={
-            !isAuthenticated ? <SignupPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            !isAuthenticated ? (
+              <SignupPage />
+            ) : (
+              <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            )
           }
-        /> 
+        />
         <Route
           path="/notification"
-          element={isAuthenticated ? <NotifcationPage /> : <Navigate to="/login" />}
+          element={
+            isAuthenticated ? <NotifcationPage /> : <Navigate to="/login" />
+          }
         />
         <Route
           path="/call"
