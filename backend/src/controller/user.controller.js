@@ -18,18 +18,20 @@ export async function getRecommendedUsers(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-
 export async function getFriends(req, res) {
-    try {
-        const user = await User.findById(req.user.id).select("friends").populate("friends", "fullName, profilePicture, nativeLanguage, learningLanguage");
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.status(200).json(user.friends);
-    } catch (error) {
-        console.error("Error in getFriends controller", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+  try {
+      const user = await User.findById(req.user.id)
+          .select("friends")
+          .populate("friends"); // Populate all fields of the friends
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+      console.log("Populated friends:", user.friends); // Debug log
+      res.status(200).json(user.friends);
+  } catch (error) {
+      console.error("Error in getFriends controller", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 export async function sendFriendRequest(req, res) {
